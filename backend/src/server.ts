@@ -1,21 +1,25 @@
 //arranca la aplicación: crea Express, conecta Mongo y abre la puerta /graphql
 //Recibe la petición de GraphQL y entrega la respuesta
+//arranca la aplicación: crea Express, conecta Mongo y abre la puerta /graphql
+//Recibe la petición de GraphQL y entrega la respuesta
 import express from 'express';
 import cors from 'cors';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express5';
 import { env } from './config/env';
 import { connectMongo } from './db/mongo';
+import { buildContext, type Context } from './graphql/context'; // nuevo
+import { userTypeDefs } from './modules/users/user.typeDefs'; // nuevo
+import { userResolvers } from './modules/users/user.resolvers'; // nuevo
 
-// Esquema mínimo para comprobar que todo conecta.
-// Luego se reemplaza por los módulos de usuarios y productos.
-const typeDefs = `#graphql
+// Base del esquema: cada módulo la extiende con "extend type Query".
+const baseTypeDefs = `#graphql
   type Query {
     health: String!
   }
 `;
 
-const resolvers = {
+const baseResolvers = {
   Query: {
     health: () => 'ok',
   },
@@ -25,7 +29,10 @@ async function main(): Promise<void> {
   await connectMongo();
 
   const app = express();
-  const apollo = new ApolloServer({ typeDefs, resolvers });
+  const apollo = new ApolloServer<Context>({
+    typeDefs: [baseTypeDefs, userTypeDefs], // nuevo: base + usuarios
+    resolvers: [baseResolvers, userResolvers], // nuevo: base + usuarios
+  });
   await apollo.start();
 
   // Ruta simple para verificar que el servidor está vivo (y "despertar" Render).
@@ -37,7 +44,7 @@ async function main(): Promise<void> {
     '/graphql',
     cors({ origin: env.CORS_ORIGIN.split(',') }),
     express.json(),
-    expressMiddleware(apollo),
+    expressMiddleware(apollo, { context: buildContext }), // nuevo: context en cada petición
   );
 
   app.listen(env.PORT, () => {
