@@ -1,3 +1,5 @@
+//Lee y escribe en MongoDB
+
 import { Schema, model, type InferSchemaType } from 'mongoose';
 
 /*
@@ -6,7 +8,9 @@ import { Schema, model, type InferSchemaType } from 'mongoose';
 
  PEROOOO, se desarrollará el viewer solo si hay tiempo :)
 */
-export const USER_TYPES = ['admin', 'viewer'] as const;
+/*export const USER_TYPES = ['admin', 'viewer'] as const;*/
+
+export const USER_TYPES = ['admin'] as const;
 
 const userSchema = new Schema(
   {
