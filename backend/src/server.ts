@@ -1,7 +1,5 @@
 //arranca la aplicación: crea Express, conecta Mongo y abre la puerta /graphql
 //Recibe la petición de GraphQL y entrega la respuesta
-//arranca la aplicación: crea Express, conecta Mongo y abre la puerta /graphql
-//Recibe la petición de GraphQL y entrega la respuesta
 import express from 'express';
 import cors from 'cors';
 import { ApolloServer } from '@apollo/server';

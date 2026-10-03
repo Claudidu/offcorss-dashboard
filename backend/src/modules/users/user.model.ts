@@ -19,7 +19,8 @@ const userSchema = new Schema(
     name: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    userType: { type: String, enum: USER_TYPES, required: true, default: 'viewer' },
+    //userType: { type: String, enum: USER_TYPES, required: true, default: 'viewer' },
+    userType: { type: String, enum: USER_TYPES, required: true, default: 'admin' },
   },
   { timestamps: true }
 );
