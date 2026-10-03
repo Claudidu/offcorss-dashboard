@@ -33,9 +33,14 @@ async function main(): Promise<void> {
   });
   await apollo.start();
 
-  // Ruta simple para verificar que el servidor está vivo (y "despertar" Render).
+  // Ruta  para verificar que el servidor está vivo (y "despertar" Render).
   app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
+  });
+
+  // Ruta raíz: describe la API cuando abra la URL en el navegador
+  app.get('/', (_req, res) => {
+    res.json({ api: 'offcorss-dashboard', health: '/health', graphql: '/graphql' });
   });
 
   app.use(
