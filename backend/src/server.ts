@@ -40,7 +40,8 @@ async function main(): Promise<void> {
 
   app.use(
     '/graphql',
-    cors({ origin: env.CORS_ORIGIN.split(',') }),
+    //cors({ origin: env.CORS_ORIGIN.split(',') }),
+    cors({ origin: env.CORS_ORIGIN.split(',').map((o) => o.trim()) }),
     express.json(),
     expressMiddleware(apollo, { context: buildContext }), // nuevo: context en cada petición
   );

@@ -7,9 +7,10 @@ import { Schema, model, type InferSchemaType } from 'mongoose';
  El admin tiene acceso a todo, mientras que el viewer solo puede ver la información.
 
  PEROOOO, se desarrollará el viewer solo si hay tiempo :)
+ 
 */
 /*export const USER_TYPES = ['admin', 'viewer'] as const;*/
-
+   // Por ahora solo existe 'admin'. 'viewer' se agrega si se desarrolla el extra de roles
 export const USER_TYPES = ['admin'] as const;
 
 const userSchema = new Schema(
