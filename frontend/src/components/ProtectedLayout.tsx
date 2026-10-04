@@ -23,7 +23,7 @@ export default function ProtectedLayout() {
 
   return (
     <>
-      <header className="bg-oc-navy white">
+      <header className="bg-oc-navy white no-print">
         <div className="flex flex-wrap items-center justify-between ph3 pv2">
           <span className="b f5 tracked">
             OFFCORSS <span className="normal o-80">Dashboard</span>

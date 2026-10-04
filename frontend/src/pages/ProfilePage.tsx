@@ -21,7 +21,7 @@ function Row({ label, htmlFor, children }: { label: string; htmlFor?: string; ch
 }
 
 const readOnlyClass = 'db pa2 bg-near-white mid-gray';
-const inputClass = 'w-100 pa2 ba b--gray';
+const inputClass = 'field';
 
 export default function ProfilePage() {
   const { user, setUser } = useAuth();
@@ -84,7 +84,7 @@ export default function ProfilePage() {
   return (
     <main className="pa3 pa4-ns">
       <section className="mw7 center ba b--light-gray pa3 pa4-ns">
-        <h1 className="f3 mt0">{editing ? 'Editar perfil' : 'Mi perfil'}</h1>
+        <h1 className="f3 mt0 oc-navy">{editing ? 'Editar perfil' : 'Mi perfil'}</h1>
 
         {saved && !editing && <p role="status" className="dark-green">Cambios guardados ✓</p>}
 
@@ -99,10 +99,10 @@ export default function ProfilePage() {
               <Row label="User Type">{u.userType}</Row>
             </dl>
             <div className="flex items-center mt3">
-              <button type="button" onClick={startEditing} className="pointer ba b--black bg-white pv2 ph3 mr3">
+              <button type="button" onClick={startEditing} className="btn btn-secondary mr3">
                 Editar
               </button>
-              <Link to="/reporte" className="link blue">Ver reporte →</Link>
+              <Link to="/reporte" className="link oc-blue">Ver reporte →</Link>
             </div>
           </>
         ) : (
@@ -128,10 +128,10 @@ export default function ProfilePage() {
             {error && <p role="alert" className="dark-red">⚠ {error}</p>}
 
             <div className="flex items-center mt3">
-              <button type="submit" disabled={saving} className="pointer ba b--black bg-black white pv2 ph3 mr3">
+              <button type="submit" disabled={saving} className="btn btn-primary mr3">
                 {saving ? 'Guardando…' : 'Guardar'}
               </button>
-              <button type="button" onClick={cancel} disabled={saving} className="pointer ba b--gray bg-white pv2 ph3">
+              <button type="button" onClick={cancel} disabled={saving} className="btn btn-secondary">
                 Cancelar
               </button>
             </div>
