@@ -170,7 +170,7 @@ export default function ReportPage() {
       <h1 className="f3 mt0 oc-navy">Reporte de productos</h1>
 
       <div className="flex flex-wrap items-center justify-between">
-        <form onSubmit={handleSearch} role="search" className="flex mb2 mr3 w-100 w-auto-l">
+        <form onSubmit={handleSearch} role="search" className="flex mb2 mr3 w-100 w-auto-l no-print">
           <label htmlFor="search" className="clip">Buscar productos</label>
           <input
             id="search"
@@ -182,13 +182,18 @@ export default function ReportPage() {
           />
           <button type="submit" className="btn btn-primary">Buscar</button>
         </form>
-        <div className="flex flex-wrap items-center">{exportButtons}</div>
+        <div className="flex flex-wrap items-center">
+          {exportButtons}
+          <button type="button" className={btn} onClick={() => window.print()} disabled={loading || items.length === 0}>
+            Imprimir listado
+          </button>
+        </div>
       </div>
 
       {exporting && <p role="status" className="oc-blue">{exporting}</p>}
       {exportError && <p role="alert" className="oc-red">⚠ {exportError}</p>}
       {selected.size > 0 && (
-        <p className="f6 gray">
+        <p className="f6 gray no-print">
           {selected.size} seleccionadas (se conservan al cambiar de página) ·{' '}
           <button type="button" className="bn bg-transparent oc-blue underline pointer pa0" onClick={() => setSelected(new Map())}>
             Limpiar selección
@@ -211,8 +216,8 @@ export default function ReportPage() {
 
       {!loading && !error && items.length > 0 && (
         <>
-          {/* Escritorio: tabla padre/hijos */}
-          <div className="dn db-l overflow-x-auto">
+          {/* Escritorio (y papel): tabla padre/hijos */}
+          <div className="dn db-l overflow-x-auto print-block">
             <table className="collapse w-100 f6">
               <thead>
                 <tr className="tl bb b--gray oc-navy">
@@ -249,7 +254,7 @@ export default function ReportPage() {
           </div>
 
           {/* Celular: tarjetas */}
-          <div className="db dn-l">
+          <div className="db dn-l no-print">
             <label className="db mb3 f6">
               <input type="checkbox" className="mr2" checked={allPageSelected} onChange={toggleSelectPage} />
               Seleccionar los {items.length} de esta página
@@ -278,7 +283,7 @@ export default function ReportPage() {
 
       {/* Celular: barra fija de exportar cuando hay seleccionadas (wireframe 3a, marcador 5) */}
       {selected.size > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white bt b--light-gray pt2 ph2 flex flex-wrap justify-center dn-l" style={{ zIndex: 10 }}>
+        <div className="no-print fixed bottom-0 left-0 right-0 bg-white bt b--light-gray pt2 ph2 flex flex-wrap justify-center dn-l" style={{ zIndex: 10 }}>
           {exportButtons}
         </div>
       )}
