@@ -44,24 +44,53 @@ En el celular, el menú se recoge en ☰, el reporte se muestra como tarjetas y 
 
 ## Requisitos de la prueba
 
-<!-- REVISAR: ajustar el texto de cada fila a la redacción literal del PDF -->
+Texto del enunciado, punto por punto.
+
+**Backend y base de datos**
 
 | Requisito | Estado | Dónde está |
 |---|---|---|
-| Login de usuarios | ✅ | `LoginPage.tsx` → mutación `login` (bcrypt + JWT) |
-| Al ingresar, mostrar los datos del usuario | ✅ | `ProfilePage.tsx` → consulta `me` |
-| Editar los datos del usuario | ✅ | Modo edición → mutación `updateMe` |
-| Usuarios guardados en MongoDB | ✅ | MongoDB Atlas, `user.model.ts` |
-| Reporte de productos desde la API de VTEX | ✅ | `ReportPage.tsx` → `products` → `vtex.client.ts` |
-| Paginación y búsqueda | ✅ | 50 por página; búsqueda por texto (`ft`) |
-| Exportar | ✅ | CSV de seleccionadas o de todo el resultado |
-| Imprimir | ✅ | Listado y ficha de producto con `@media print` |
-| React + TypeScript | ✅ | `frontend/` (Vite) |
-| Node + Express + GraphQL | ✅ | `backend/` (Express 5 + Apollo Server 5) |
-| Diseño responsive | ✅ | Tarjetas y menú ☰ en celular |
-| HTML válido (W3C) | ✅ | Ver [resultados](#diseño-accesibilidad-y-w3c) |
-| Optimización de imágenes | ✅ | Miniaturas pedidas a VTEX en el tamaño exacto + carga diferida |
-| Aplicación publicada | ✅ | GitHub Pages + Render |
+| Crear un servicio con Node.js para realizar peticiones HTTP | ✅ | `backend/` (Express 5) · `vtex.client.ts` |
+| Consumir el API de productos de VTEX (`/api/catalog_system/pub/products/search/`) | ✅ | `vtex.client.ts` + `product.mapper.ts` |
+| MongoDB / MariaDB | ✅ | MongoDB Atlas · `user.model.ts` |
+| Consumir la base de datos usando GraphQL | ✅ | Apollo Server: `login`, `me`, `updateMe` |
+
+**Frontend**
+
+| Requisito | Estado | Dónde está |
+|---|---|---|
+| Dashboard que requiera login (debe validar al usuario en la DB) | ✅ | `LoginPage.tsx` → mutación `login` (bcrypt + JWT) |
+| Vista de detalle del usuario: al ingresar, mostrar Username, Create Date, Name, Last Name, Email, User Type | ✅ | `ProfilePage.tsx` → consulta `me` (pantalla de llegada) |
+| Los datos del usuario se deben poder editar y actualizar en la DB | ✅ | Modo edición → mutación `updateMe` |
+| Vista de listado de productos que consuma el servicio de VTEX | ✅ | `ReportPage.tsx` → consulta `products` |
+| Al menos 5 campos: productId, Brand, productTitle, ítems (listado de itemId), images | ✅ | Fila de producto + filas hijas con cada itemId, talla y miniatura |
+| Pueden agregarse campos adicionales | ✅ | Precio\*, Descuento\*, disponibilidad, enlace a la tienda (marcados con \*) |
+| Seleccionar filas y exportar a .csv | ✅ | "Exportar seleccionadas (n)" y "Exportar todo" |
+| Paginación | ✅ | 50 por página, con el total real |
+| Filtrar por texto | ✅ | Buscador (`ft` de VTEX) |
+| Vista de detalle del producto con los 5 campos y los adicionales que se desee | ✅ | `ProductPage.tsx`: galería, categoría\*, descripción\*, tabla de SKU con EAN\* |
+| La vista de detalle debe poderse imprimir | ✅ | Botón "Imprimir" + `@media print` (también se imprime el listado) |
+| Logout | ✅ | Botón "Salir" en la barra |
+
+**Publicación y entrega**
+
+| Requisito | Estado | Dónde está |
+|---|---|---|
+| Backend publicado (sugerido: Render) | ✅ | [offcorss-dashboard-api.onrender.com](https://offcorss-dashboard-api.onrender.com/health) |
+| Frontend publicado (sugerido: GitHub Pages) | ✅ | [claudidu.github.io/offcorss-dashboard](https://claudidu.github.io/offcorss-dashboard/) |
+| Compartir el repositorio con `narvaezcarlos` | ✅ | Invitado como colaborador (el repositorio además es público) |
+
+**Recomendaciones y lo que se tomará en cuenta**
+
+| Punto | Qué hice |
+|---|---|
+| Usar Tachyons | ✅ Todo el maquetado; solo los colores y botones de marca van en `index.css` |
+| Optimización de imágenes | ✅ Miniaturas pedidas a VTEX en el tamaño exacto (120 / 80 / 600 px), `loading="lazy"`, `width` y `height` declarados |
+| Desarrollos adicionales | Impresión del listado, "Exportar todo" con progreso, selección que se conserva entre páginas, estado en la URL, vista de celular con tarjetas |
+| Transiciones y efectos CSS | Transiciones en botones y estados *hover* |
+| Integraciones con desarrollos externos | VTEX (catálogo en vivo), MongoDB Atlas, Google Fonts |
+| Buenas prácticas de HTML | Etiquetas semánticas (`main`, `nav`, `header`, `article`, `dl`), `label` en cada campo, atributos ARIA, `lang="es"` |
+| Validador W3C | ✅ Ver [resultados](#diseño-accesibilidad-y-w3c) |
 
 ## Arquitectura
 
@@ -213,7 +242,7 @@ Como React dibuja la página con JavaScript, la URL publicada solo contiene el "
 
 | Pieza | Dónde | Cómo |
 |---|---|---|
-| Frontend | GitHub Pages | `npm run deploy` en `frontend/` (build de Vite + `gh-pages`) |
+| Frontend | GitHub Pages | `npm run deploy` en `frontend/`: compila con Vite y publica la carpeta `dist/` en la rama `gh-pages`, que es la que sirve GitHub Pages. `main` guarda solo el código fuente |
 | Backend | Render (Free, Virginia) | Root Directory `backend`; se redespliega solo cuando un commit cambia `backend/`. Health check en `/health`. Node 24 (`NODE_VERSION`) |
 | Base de datos | MongoDB Atlas (São Paulo) | Usuario con permisos de lectura y escritura únicamente |
 
@@ -247,6 +276,7 @@ Otros scripts del backend: `npm run typecheck`, `npm run build`, `npm start`, `n
 - **Superar el tope de 2.500 resultados**: recorrer el catálogo por categorías o usar la Intelligent Search API.
 - **Cookie `httpOnly`** para el token, en lugar de `localStorage`.
 - Servidor y base de datos **en la misma región**.
+- **Despliegue automático con GitHub Actions**: compilar y publicar el frontend en cada push a `main`, en lugar de correr `npm run deploy` desde mi PC.
 - **Rol `viewer`** y una pantalla de Usuarios para el `admin`.
 - **Panel "Salud del catálogo"**: curva de tallas rota, SKU sin EAN, productos agotados, contenido incompleto. Cada indicador filtraría la tabla.
 - Seleccionar todos los resultados de una búsqueda (aviso tipo Gmail), ordenar las tallas e imprimir solo los seleccionados.
