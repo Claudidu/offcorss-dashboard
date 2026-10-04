@@ -8,6 +8,7 @@ Aplicación con inicio de sesión, perfil editable y un reporte de productos que
 | **App** | https://claudidu.github.io/offcorss-dashboard/ |
 | **API (GraphQL)** | https://offcorss-dashboard-api.onrender.com/graphql · estado: [`/health`](https://offcorss-dashboard-api.onrender.com/health) |
 | **Repositorio** | https://github.com/Claudidu/offcorss-dashboard |
+| **Video (1:30)** | [Así resolví la prueba](https://youtu.be/sj7lsGUh6sA) |
 
 **Usuario de prueba:** `evaluador` · la contraseña va en el correo de entrega (el repositorio es público, así que no publico credenciales).
 
