@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "seed": "tsx src/scripts/seed.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "measure:vtex": "tsx src/scripts/measure-vtex.ts"
   },
   "keywords": [],
   "author": "Claudia Dulcey",
