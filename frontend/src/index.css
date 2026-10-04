@@ -48,4 +48,22 @@ body {
   border-radius: 8px;
   font: inherit;
 }
-.field:focus { outline: 2px solid var(--oc-blue); outline-offset: 1px; }
+.field:focus { outline: 2px solid var(--oc-blue); outline-offset: 1px; }.b--oc-red { border-color: var(--oc-red); }
+
+/* ---------- Impresión ---------- */
+.print-only { display: none; }
+
+@media print {
+  @page { margin: 1.5cm; }
+  body, body * { color: #000 !important; }
+  .no-print,
+  button,
+  input[type='checkbox'] { display: none !important; }
+  .print-only { display: block !important; }
+  .print-block { display: block !important; }
+  a { text-decoration: none; }
+  a.print-url::after { content: ' (' attr(href) ')'; font-size: 0.8em; }
+  tr { break-inside: avoid; }
+  /* El punto ● verde es un fondo: sin esto, el navegador no lo imprime */
+  .print-color { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
