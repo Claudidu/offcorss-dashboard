@@ -29,6 +29,7 @@ export interface Product {
   discountPercent: number | null;
   available: boolean;
   thumbnail: string | null;
+  images: string[];
   link: string | null;
   skus: Sku[];
 }
@@ -43,7 +44,7 @@ export interface ProductPage {
 
 // Solo lo que el reporte necesita (el detalle pedirá además galería, categoría y descripción)
 const PRODUCT_FIELDS = `
-  productId name brand price listPrice discountPercent available thumbnail link
+  productId name brand price listPrice discountPercent available thumbnail images link
   skus { itemId size price listPrice available ean thumbnail }
 `;
 

@@ -54,7 +54,7 @@ export default function ProductRows({ product, selected, expanded, onToggleSelec
           )}
         </td>
         <td className="pa2">
-          <Link to={`/producto/${product.productId}`} className="b link dark-blue hover-blue">
+          <Link to={`/producto/${product.productId}`} className="b link oc-navy hover-oc-red">
             {product.name}
           </Link>
           <div className="f7 gray">{product.productId}</div>
@@ -67,7 +67,7 @@ export default function ProductRows({ product, selected, expanded, onToggleSelec
         <td className="pa2">{product.discountPercent ? `-${product.discountPercent} %` : '—'}</td>
         <td className="pa2">
           {product.link && (
-            <a href={product.link} target="_blank" rel="noopener noreferrer" className="link blue">
+            <a href={product.link} target="_blank" rel="noopener noreferrer" className="link oc-blue">
               Tienda ↗
             </a>
           )}

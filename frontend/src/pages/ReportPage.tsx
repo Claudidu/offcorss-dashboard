@@ -7,16 +7,16 @@
         src/components/ProductRows.tsx → fila padre + filas hijas (SKU)
         src/pages/ReportPage.tsx     → la pantalla: búsqueda, paginación, selección, exportar
 */
-
 import { useEffect, useState, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router';
 import { fetchProducts, type Product, type ProductPage } from '../api/products';
+import ProductCard from '../components/ProductCard';
 import ProductRows from '../components/ProductRows';
 import { downloadCsv } from '../utils/csv';
 import { formatNumber } from '../utils/format';
 
 const VTEX_MAX_RESULTS = 2500;
-const btn = 'pointer ba b--black bg-white pv2 ph3 mr2 mb2';
+const btn = 'btn btn-secondary mr2 mb2';
 
 export default function ReportPage() {
   // Página y búsqueda viven en la URL: #/reporte?q=camiseta&page=2
@@ -34,12 +34,10 @@ export default function ReportPage() {
   const [exporting, setExporting] = useState<string | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
 
-  // Si la búsqueda cambia desde la URL (por ejemplo, al volver), el campo la refleja
   useEffect(() => {
     setSearchInput(search);
   }, [search]);
 
-  // Carga la página cada vez que cambian página, búsqueda o se pide reintentar
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -104,7 +102,10 @@ export default function ReportPage() {
     });
   }
 
-  // "Exportar todo" = todos los resultados del filtro actual, página por página
+  function exportSelected() {
+    downloadCsv([...selected.values()], 'offcorss-seleccionados.csv');
+  }
+
   async function exportAll() {
     if (!data) return;
     const totalPages = data.totalPages;
@@ -129,12 +130,28 @@ export default function ReportPage() {
   const exportable = data ? Math.min(data.total, VTEX_MAX_RESULTS) : 0;
   const atVtexLimit = !!data && data.total > VTEX_MAX_RESULTS && data.page === data.totalPages;
 
+  const exportButtons = (
+    <>
+      <button type="button" className={btn} disabled={selected.size === 0 || !!exporting} onClick={exportSelected}>
+        Exportar seleccionadas ({selected.size})
+      </button>
+      <button
+        type="button"
+        className={btn}
+        disabled={!data || data.total === 0 || !!exporting || loading}
+        onClick={exportAll}
+      >
+        Exportar todo ({formatNumber(exportable)})
+      </button>
+    </>
+  );
+
   const pagination = data && data.total > 0 && (
-    <nav aria-label="Paginación" className="flex items-center mv3">
+    <nav aria-label="Paginación" className="flex flex-wrap items-center mv3">
       <button type="button" className={btn} disabled={page <= 1 || loading} onClick={() => goToPage(page - 1)}>
         ‹ Anterior
       </button>
-      <span className="mh2 mb2">
+      <span className="mh2 mb2 f6">
         {formatNumber(from)} — {formatNumber(to)} de {formatNumber(data.total)}
       </span>
       <button
@@ -149,49 +166,31 @@ export default function ReportPage() {
   );
 
   return (
-    <main className="pa3 pa4-ns">
-      <h1 className="f3 mt0">Reporte de productos</h1>
+    <main className="pa3 pb5 pa4-l">
+      <h1 className="f3 mt0 oc-navy">Reporte de productos</h1>
 
       <div className="flex flex-wrap items-center justify-between">
-        <form onSubmit={handleSearch} role="search" className="flex mb2 mr3">
+        <form onSubmit={handleSearch} role="search" className="flex mb2 mr3 w-100 w-auto-l">
           <label htmlFor="search" className="clip">Buscar productos</label>
           <input
             id="search"
             type="search"
             placeholder="Buscar productos…"
-            className="pa2 ba b--gray"
+            className="field mr2"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-          <button type="submit" className="pointer ba b--black bg-black white pv2 ph3">Buscar</button>
+          <button type="submit" className="btn btn-primary">Buscar</button>
         </form>
-
-        <div className="flex flex-wrap items-center">
-          <button
-            type="button"
-            className={btn}
-            disabled={selected.size === 0 || !!exporting}
-            onClick={() => downloadCsv([...selected.values()], 'offcorss-seleccionados.csv')}
-          >
-            Exportar seleccionadas ({selected.size})
-          </button>
-          <button
-            type="button"
-            className={btn}
-            disabled={!data || data.total === 0 || !!exporting || loading}
-            onClick={exportAll}
-          >
-            Exportar todo ({formatNumber(exportable)})
-          </button>
-        </div>
+        <div className="flex flex-wrap items-center">{exportButtons}</div>
       </div>
 
-      {exporting && <p role="status" className="blue">{exporting}</p>}
-      {exportError && <p role="alert" className="dark-red">⚠ {exportError}</p>}
+      {exporting && <p role="status" className="oc-blue">{exporting}</p>}
+      {exportError && <p role="alert" className="oc-red">⚠ {exportError}</p>}
       {selected.size > 0 && (
         <p className="f6 gray">
           {selected.size} seleccionadas (se conservan al cambiar de página) ·{' '}
-          <button type="button" className="bn bg-transparent blue underline pointer pa0" onClick={() => setSelected(new Map())}>
+          <button type="button" className="bn bg-transparent oc-blue underline pointer pa0" onClick={() => setSelected(new Map())}>
             Limpiar selección
           </button>
         </p>
@@ -202,8 +201,8 @@ export default function ReportPage() {
       {loading && <p role="status">Cargando productos…</p>}
 
       {!loading && error && (
-        <div role="alert" className="ba b--light-red pa3">
-          <p className="mt0 dark-red">⚠ {error}</p>
+        <div role="alert" className="ba b--light-red br3 pa3">
+          <p className="mt0 oc-red">⚠ {error}</p>
           <button type="button" className={btn} onClick={() => setReloadKey((k) => k + 1)}>Reintentar</button>
         </div>
       )}
@@ -212,10 +211,11 @@ export default function ReportPage() {
 
       {!loading && !error && items.length > 0 && (
         <>
-          <div className="overflow-x-auto">
+          {/* Escritorio: tabla padre/hijos */}
+          <div className="dn db-l overflow-x-auto">
             <table className="collapse w-100 f6">
               <thead>
-                <tr className="tl bb b--gray">
+                <tr className="tl bb b--gray oc-navy">
                   <th className="pa2">
                     <input
                       type="checkbox"
@@ -247,6 +247,25 @@ export default function ReportPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Celular: tarjetas */}
+          <div className="db dn-l">
+            <label className="db mb3 f6">
+              <input type="checkbox" className="mr2" checked={allPageSelected} onChange={toggleSelectPage} />
+              Seleccionar los {items.length} de esta página
+            </label>
+            <ul className="list pl0 mt0">
+              {items.map((p) => (
+                <ProductCard
+                  key={p.productId}
+                  product={p}
+                  selected={selected.has(p.productId)}
+                  onToggleSelect={() => toggleSelect(p)}
+                />
+              ))}
+            </ul>
+          </div>
+
           <p className="f7 gray">* Campos adicionales</p>
           {pagination}
           {atVtexLimit && (
@@ -255,6 +274,13 @@ export default function ReportPage() {
             </p>
           )}
         </>
+      )}
+
+      {/* Celular: barra fija de exportar cuando hay seleccionadas (wireframe 3a, marcador 5) */}
+      {selected.size > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white bt b--light-gray pt2 ph2 flex flex-wrap justify-center dn-l" style={{ zIndex: 10 }}>
+          {exportButtons}
+        </div>
       )}
     </main>
   );

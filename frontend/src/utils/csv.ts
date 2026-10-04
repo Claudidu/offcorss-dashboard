@@ -12,7 +12,7 @@
 import type { Product } from '../api/products';
 
 const HEADERS = [
-  'productId', 'producto', 'marca', 'itemId', 'talla',
+  'productId', 'producto', 'marca', 'imagen', 'itemId', 'talla',
   'precio', 'precio_lista', 'descuento_%', 'disponible', 'ean', 'enlace',
 ];
 
@@ -29,7 +29,7 @@ export function productsToCsv(products: Product[]): string {
     for (const s of p.skus) {
       lines.push(
         [
-          p.productId, p.name, p.brand, s.itemId, s.size,
+          p.productId, p.name, p.brand, p.images[0] ?? null, s.itemId, s.size,
           s.price, s.listPrice, p.discountPercent,
           s.available ? 'sí' : 'no', s.ean, p.link,
         ].map(cell).join(';'),
