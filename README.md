@@ -226,17 +226,17 @@ Todos los bocetos: [`docs/wireframes/`](docs/wireframes/) (incluye edición del 
 
 **Validación W3C** (validator.w3.org):
 
-<!-- COMPLETAR con capturas (docs/w3c/) -->
-
 | Pantalla | Resultado |
 |---|---|
-| `index.html` publicado | ✅ 0 errores <!-- confirmar 0 avisos tras quitar las barras finales --> |
-| Login | ⏳ |
-| Perfil (lectura y edición) | ⏳ |
-| Reporte | ⏳ |
-| Detalle | ⏳ |
+| `index.html` publicado (por URL) | ✅ Sin errores ni avisos · [captura](docs/w3c/0-url.png) |
+| Login | ✅ Sin errores ni avisos · [captura](docs/w3c/1-login.png) |
+| Mi perfil | ✅ Sin errores ni avisos · [captura](docs/w3c/2a-perfil.png) |
+| Mi perfil, modo edición | ✅ Sin errores ni avisos · [captura](docs/w3c/2b-perfil-edicion.png) |
+| Reporte | ✅ Sin errores ni avisos · [captura](docs/w3c/3a-reporte.png) |
+| Reporte con búsqueda | ✅ Sin errores ni avisos · [captura](docs/w3c/3b-reporte-busqueda.png) |
+| Ficha de producto | ✅ Sin errores ni avisos · [captura](docs/w3c/4-detalle.png) |
 
-Como React dibuja la página con JavaScript, la URL publicada solo contiene el "cascarón". Para validar cada pantalla copié el HTML ya renderizado desde DevTools (*Copy outerHTML*), le agregué `<!doctype html>` (DevTools no lo copia) y lo pegué en *Validate by Direct Input*. Lo hice en una ventana de incógnito: las extensiones del navegador insertan atributos propios en el HTML (por ejemplo `cz-shortcut-listen`, de ColorZilla) que no son parte de la app.
+Como React dibuja la página con JavaScript, la URL publicada solo contiene el "cascarón". Para validar cada pantalla copié el HTML ya renderizado desde DevTools (*Copy outerHTML*), le agregué `<!doctype html>` (DevTools no lo copia) y lo pegué en *Validate by Direct Input*. Lo hice en una ventana de incógnito y con las extensiones apagadas: las extensiones insertan atributos propios en el HTML (por ejemplo `cz-shortcut-listen`, de ColorZilla) que no son parte de la app.
 
 ## Despliegue
 
