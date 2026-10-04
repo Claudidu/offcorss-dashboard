@@ -35,7 +35,7 @@ export interface VtexProduct {
   productId: string; // Identificador del producto
   productName: string; // Nombre que se muestra en la tienda
   brand: string; // Marca
-  link: string; // Enlace a la pagina del producto en la tienda
+  linkText: string; // Enlace a la pagina del producto en la tienda
   categories: string[]; // Categorias a las que pertenece (ej. "/Ninos/Camisetas/")
   description: string; // Descripcion del producto
   items: VtexItem[]; // Todas sus variantes (tallas, colores...)

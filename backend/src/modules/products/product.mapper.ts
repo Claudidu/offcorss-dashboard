@@ -1,3 +1,4 @@
+import { env } from '../../config/env';
 import type { VtexItem, VtexProduct } from './vtex.types';
 import type { Product, Sku } from './product.types';
 
@@ -39,18 +40,35 @@ function discountPercent(price: number | null, listPrice: number | null): number
   return Math.round((1 - price / listPrice) * 100);
 }
 
-// "/Niño/Camisetas/" -- "Niño › Camisetas"
+// "/Ropa nino/Camisetas/" → "Ropa nino › Camisetas"
 function formatCategory(path: string | undefined): string | null {
   if (!path) return null;
   const parts = path.split('/').filter(Boolean);
   return parts.length ? parts.join(' › ') : null;
 }
 
+// Junta las fotos de todos los SKU. VTEX repite la misma foto en cada talla con
+// otro id, así que se descartan los duplicados por nombre de archivo.
+function collectImages(items: VtexItem[]): string[] {
+  const seen = new Set<string>();
+  const urls: string[] = [];
+  for (const item of items) {
+    for (const img of item.images) {
+      const fileName = img.imageUrl.split('/').pop()?.split('?')[0] ?? img.imageUrl;
+      if (!seen.has(fileName)) {
+        seen.add(fileName);
+        urls.push(img.imageUrl);
+      }
+    }
+  }
+  return urls;
+}
+
 export function toProduct(p: VtexProduct): Product {
   const skus = p.items.map(toSku);
   // Si todo está agotado, se muestra el precio del primer SKU como referencia
   const reference = cheapestAvailable(skus) ?? skus[0] ?? null;
-  const images = (p.items[0]?.images ?? []).map((img) => img.imageUrl);
+  const images = collectImages(p.items);
 
   return {
     productId: p.productId,
@@ -64,7 +82,7 @@ export function toProduct(p: VtexProduct): Product {
     images,
     category: formatCategory(p.categories[0]),
     description: p.description?.trim() || null,
-    link: p.link || null,
+    link: p.linkText ? `${env.STORE_URL}/${p.linkText}/p` : null,
     skus,
   };
 }

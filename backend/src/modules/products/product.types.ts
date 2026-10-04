@@ -1,4 +1,6 @@
-// Formato propio de la app. No depende de los nombres de VTEX
+// Solo los campos de VTEX que la app usa. El JSON real trae muchos más
+// (PaymentOptions, Installments…), que el mapper descarta.
+// Formato propio de la app. No depende de los nombres de VTEX.
 
 export interface Sku {
   itemId: string;
@@ -31,4 +33,5 @@ export interface ProductPage {
   total: number;
   page: number;
   pageSize: number;
+  totalPages: number;
 }

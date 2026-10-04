@@ -6,9 +6,11 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express5';
 import { env } from './config/env';
 import { connectMongo } from './db/mongo';
-import { buildContext, type Context } from './graphql/context'; // nuevo
-import { userTypeDefs } from './modules/users/user.typeDefs'; // nuevo
-import { userResolvers } from './modules/users/user.resolvers'; // nuevo
+import { buildContext, type Context } from './graphql/context'; 
+import { userTypeDefs } from './modules/users/user.typeDefs'; 
+import { userResolvers } from './modules/users/user.resolvers'; 
+import { productTypeDefs } from './modules/products/product.typeDefs';
+import { productResolvers } from './modules/products/product.resolvers';
 
 // Base del esquema: cada módulo la extiende con "extend type Query".
 const baseTypeDefs = `#graphql
@@ -28,8 +30,10 @@ async function main(): Promise<void> {
 
   const app = express();
   const apollo = new ApolloServer<Context>({
-    typeDefs: [baseTypeDefs, userTypeDefs], // nuevo: base + usuarios
-    resolvers: [baseResolvers, userResolvers], // nuevo: base + usuarios
+    typeDefs: [baseTypeDefs, userTypeDefs, productTypeDefs],
+    resolvers: [baseResolvers, userResolvers, productResolvers],
+    //typeDefs: [baseTypeDefs, userTypeDefs], // nuevo: base + usuarios
+    //resolvers: [baseResolvers, userResolvers], // nuevo: base + usuarios
   });
   await apollo.start();
 
