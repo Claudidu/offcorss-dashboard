@@ -60,3 +60,18 @@ export async function fetchProducts(page: number, search: string): Promise<Produ
   );
   return data.products;
 }
+// El detalle pide además categoría y descripción
+export interface ProductDetail extends Product {
+  category: string | null;
+  description: string | null;
+}
+
+export async function fetchProduct(id: string): Promise<ProductDetail | null> {
+  const data = await gql<{ product: ProductDetail | null }>(
+    `query Product($id: ID!) {
+      product(id: $id) { ${PRODUCT_FIELDS} category description }
+    }`,
+    { id },
+  );
+  return data.product;
+}
