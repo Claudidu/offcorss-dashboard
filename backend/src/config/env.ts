@@ -11,6 +11,7 @@ const schema = z.object({
   SEED_PASSWORD: z.string().min(8, 'SEED_PASSWORD debe tener al menos 8 caracteres').optional(), //es opcional porque Render no corre el seed y no debe exigirla al arrancar
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   VTEX_BASE_URL: z.url().default('https://offcorss.myvtex.com'),
+  STORE_URL: z.url().default('https://www.offcorss.com'), //es para que "Ver en tienda ↗" abra www.offcorss.com y no el dominio interno
 });
 
 const parsed = schema.safeParse(process.env);
