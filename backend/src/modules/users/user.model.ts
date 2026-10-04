@@ -3,14 +3,12 @@
 import { Schema, model, type InferSchemaType } from 'mongoose';
 
 /*
- Voy a crear dos roles: admin y viewer. 
+ Pensé en dos roles: admin y viewer.
  El admin tiene acceso a todo, mientras que el viewer solo puede ver la información.
 
- PEROOOO, se desarrollará el viewer solo si hay tiempo :)
- 
+ PEROOOO, el viewer se desarrollará solo si hay tiempo :)
+ Por ahora solo existe 'admin' (ver "Qué haría con más tiempo" en el README).
 */
-/*export const USER_TYPES = ['admin', 'viewer'] as const;*/
-   // Por ahora solo existe 'admin'. 'viewer' se agrega si se desarrolla el extra de roles
 export const USER_TYPES = ['admin'] as const;
 
 const userSchema = new Schema(
@@ -20,7 +18,6 @@ const userSchema = new Schema(
     name: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    //userType: { type: String, enum: USER_TYPES, required: true, default: 'viewer' },
     userType: { type: String, enum: USER_TYPES, required: true, default: 'admin' },
   },
   { timestamps: true }
@@ -43,7 +40,7 @@ Para password:
    
 
 Para tipo de usuario:
-    - enum: USER_TYPES; para que solo pueda ser admin o viewer, no ambos
+    - enum: USER_TYPES; solo acepta los roles de la lista (hoy, solo admin)
 
 Para timestamps:
     - timestamps:true; para que se guarde la fecha de creación y actualización del usuario

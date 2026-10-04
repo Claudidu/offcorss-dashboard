@@ -6,9 +6,9 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express5';
 import { env } from './config/env';
 import { connectMongo } from './db/mongo';
-import { buildContext, type Context } from './graphql/context'; 
-import { userTypeDefs } from './modules/users/user.typeDefs'; 
-import { userResolvers } from './modules/users/user.resolvers'; 
+import { buildContext, type Context } from './graphql/context';
+import { userTypeDefs } from './modules/users/user.typeDefs';
+import { userResolvers } from './modules/users/user.resolvers';
 import { productTypeDefs } from './modules/products/product.typeDefs';
 import { productResolvers } from './modules/products/product.resolvers';
 
@@ -32,12 +32,10 @@ async function main(): Promise<void> {
   const apollo = new ApolloServer<Context>({
     typeDefs: [baseTypeDefs, userTypeDefs, productTypeDefs],
     resolvers: [baseResolvers, userResolvers, productResolvers],
-    //typeDefs: [baseTypeDefs, userTypeDefs], // nuevo: base + usuarios
-    //resolvers: [baseResolvers, userResolvers], // nuevo: base + usuarios
   });
   await apollo.start();
 
-  // Ruta  para verificar que el servidor está vivo (y "despertar" Render).
+  // Ruta para verificar que el servidor está vivo (y "despertar" Render).
   app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
   });
@@ -49,10 +47,9 @@ async function main(): Promise<void> {
 
   app.use(
     '/graphql',
-    //cors({ origin: env.CORS_ORIGIN.split(',') }),
     cors({ origin: env.CORS_ORIGIN.split(',').map((o) => o.trim()) }),
     express.json(),
-    expressMiddleware(apollo, { context: buildContext }), // nuevo: context en cada petición
+    expressMiddleware(apollo, { context: buildContext }), // context en cada petición (lee el token)
   );
 
   app.listen(env.PORT, () => {
